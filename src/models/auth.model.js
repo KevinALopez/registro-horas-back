@@ -1,6 +1,8 @@
 const db = require("../config/db.js");
 const jwt = require("jsonwebtoken");
 
+require("dotenv").config();
+
 /**
  * Searches for a user in the database by their username.
  *
