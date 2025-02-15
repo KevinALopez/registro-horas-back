@@ -10,4 +10,10 @@ const pool = mysql.createPool({
     database: process.env.DB_NAME,
 });
 
+pool.promise()
+    .query("select * from projects")
+    .then((result) => {
+        console.log(result[0][0]);
+    });
+
 module.exports = pool.promise();
