@@ -67,4 +67,13 @@ const registerWorkdayStart = async ({ userId, start }) => {
     return result;
 };
 
+const registerWorkdayEnd = async ({ id, end }) => {
+    const [result] = await pool.query(
+        "UPDATE hours_by_date SET end = ? WHERE id = ?",
+        [id, end]
+    );
+
+    return result;
+};
+
 module.exports = { registerWorkdayStart, getAllHoursByMonth };
