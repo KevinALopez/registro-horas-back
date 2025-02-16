@@ -1,4 +1,5 @@
 const HoursModel = require("../models/hours.model");
+const moment = require("moment");
 
 /**
  * Obtiene todas las horas trabajadas en un mes específico.
@@ -52,6 +53,41 @@ const getAllHoursByMonth = async (req, res) => {
     }
 };
 
+
+const getHoursWorkedByDate = async (req, res) => {
+    const { date } = req.body;
+
+    console.log(`📥 Recibida solicitud POST /api/hours con fecha: ${date}`);
+
+    // Validar que la fecha esté presente
+    if (!date) {
+        console.warn("❌ Error: No se envió una fecha.");
+        return res.status(400).json({ message: "Date is required." });
+    }
+
+    // Validar formato de fecha (DD-MM-YYYY)
+    if (!moment(date, "DD-MM-YYYY", true).isValid()) {
+        console.warn("❌ Error: Formato de fecha inválido.");
+        return res.status(400).json({ message: "Invalid date format. Use DD-MM-YYYY." });
+    }
+
+    // Convertir al formato compatible con MySQL (YYYY-MM-DD)
+    const formattedDate = moment(date, "DD-MM-YYYY").format("YYYY-MM-DD");
+
+    try {
+        const totalHours = await HoursModel.getHoursWorkedByDate(formattedDate);
+
+        console.log(`✅ Horas trabajadas el ${date}: ${totalHours}`);
+
+        res.status(200).json({ hours: totalHours });
+
+    } catch (error) {
+        console.error("❌ Error en getHoursWorkedByDate:", error);
+        res.status(500).json({ message: "Server error, please try again later." });
+    }
+};
+
+
 module.exports = {
-    getAllHoursByMonth
+    getAllHoursByMonth, getHoursWorkedByDate
 };
