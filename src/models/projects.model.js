@@ -56,9 +56,5 @@ const deleteProjectById = async (id) => {
 };
 
 module.exports = {
-<<<<<<< HEAD
-    deleteProjectById,
-=======
     deleteProjectById, updateById, selectById
->>>>>>> feature_updateProjectById
 };

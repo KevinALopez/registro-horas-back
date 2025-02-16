@@ -1,9 +1,5 @@
 const jwt = require("jsonwebtoken");
-<<<<<<< HEAD
 const User = require("../models/users.model");
-=======
-const User = require("../models/users.model")
->>>>>>> feature_updateProjectById
 
 require("dotenv").config();
 

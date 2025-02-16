@@ -54,9 +54,5 @@ const updateProjectById = async (req, res, next) => {
 }
 
 module.exports = {
-<<<<<<< HEAD
-    deleteProjectById,
-=======
     deleteProjectById, updateProjectById
->>>>>>> feature_updateProjectById
 };
