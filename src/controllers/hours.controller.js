@@ -1,5 +1,15 @@
 const HoursModel = require("../models/hours.model");
-const moment = require("moment");
+
+
+const getFormattedDate = (dateString) => {
+    const parts = dateString.split("-");
+    if (parts.length !== 3) return null;
+
+    const [year, month, day] = parts;
+    return `${year}-${month}-${day}`; //Devuelve en formato YYYY-MM-DD
+};
+
+
 
 /**
  * Obtiene todas las horas trabajadas en un mes específico.
@@ -53,39 +63,49 @@ const getAllHoursByMonth = async (req, res) => {
     }
 };
 
-
+/**
+ * Obtiene el total de horas trabajadas por usuario en una fecha específica.
+ * 
+ * Esta función recibe una fecha desde el cuerpo de la solicitud (`req.body.date`),
+ * la valida y la convierte al formato `YYYY-MM-DD`. Luego consulta la base de datos
+ * para recuperar las horas trabajadas en esa fecha, agrupadas por usuario.
+ * 
+ * @async
+ * @function getHoursWorkedByDate
+ * @param {Object} req - Objeto de solicitud de Express.
+ * @param {Object} req.body - Datos enviados en la solicitud.
+ * @param {string} req.body.date - Fecha a consultar en formato `YYYY-MM-DD`.
+ * @param {Object} res - Objeto de respuesta de Express.
+ * @returns {Promise<void>} Devuelve una respuesta JSON con los datos de horas trabajadas o un mensaje de error.
+ * @throws {Error} Si ocurre un error durante la consulta a la base de datos.
+ */
 const getHoursWorkedByDate = async (req, res) => {
+
     const { date } = req.body;
-
-    console.log(`📥 Recibida solicitud POST /api/hours con fecha: ${date}`);
-
-    // Validar que la fecha esté presente
+    // Verificar si se recibió una fecha
     if (!date) {
-        console.warn("❌ Error: No se envió una fecha.");
         return res.status(400).json({ message: "Date is required." });
     }
+    // Convertir la fecha al formato MySQL (YYYY-MM-DD)
+    const formattedDate = getFormattedDate(date);
 
-    // Validar formato de fecha (DD-MM-YYYY)
-    if (!moment(date, "DD-MM-YYYY", true).isValid()) {
-        console.warn("❌ Error: Formato de fecha inválido.");
-        return res.status(400).json({ message: "Invalid date format. Use DD-MM-YYYY." });
+    // Validar que la conversión fue exitosa
+    if (!formattedDate || !/^\d{4}-\d{2}-\d{2}$/.test(formattedDate)) {
+        return res.status(400).json({ message: "Invalid date format. Use YYYY-MM-DD." });
     }
-
-    // Convertir al formato compatible con MySQL (YYYY-MM-DD)
-    const formattedDate = moment(date, "DD-MM-YYYY").format("YYYY-MM-DD");
-
     try {
-        const totalHours = await HoursModel.getHoursWorkedByDate(formattedDate);
-
-        console.log(`✅ Horas trabajadas el ${date}: ${totalHours}`);
-
-        res.status(200).json({ hours: totalHours });
-
+        // Obtener datos desde el modelo
+        const workData = await HoursModel.getHoursWorkedByDate(formattedDate);
+        if (!workData || workData.length === 0) {
+            return res.status(404).json({ message: "No hours found for the selected date." });
+        }
+        res.status(200).json({ data: workData });
     } catch (error) {
-        console.error("❌ Error en getHoursWorkedByDate:", error);
         res.status(500).json({ message: "Server error, please try again later." });
     }
 };
+
+
 
 
 module.exports = {
