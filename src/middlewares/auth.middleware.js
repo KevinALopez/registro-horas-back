@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+const User = require("../models/users.model")
 
 require("dotenv").config();
 
@@ -26,17 +27,26 @@ const checkToken = async (req, res, next) => {
     // TODO: Check if user is valid and add it to the request;
     // payload = { id: user.id, role: user.role , iat}
 
-    /* const user = await User.selectById(payload.id);
+    const user = await User.selectById(payload.id);
 
     if (!user) {
         return res.status(401).json({ message: "User is not valid." });
     }
 
-    req.user = user; */
+    req.user = user;
 
     next();
 };
 
+const checkAdmin = (req, res, next) => {
+    if (req.user.role !== 'admin') {
+        return res.status(403).json({ message: 'No eres usuario ADMIN' })
+    }
+
+    next();
+}
+
+
 module.exports = {
-    checkToken,
+    checkToken, checkAdmin
 };
