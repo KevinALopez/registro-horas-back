@@ -14,8 +14,6 @@ const checkToken = async (req, res, next) => {
 
     let payload = null;
 
-    console.log(token);
-
     try {
         payload = jwt.verify(token, process.env.JWT_SECRET);
     } catch (error) {
