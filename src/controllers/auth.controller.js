@@ -1,6 +1,5 @@
 const bcrypt = require("bcryptjs");
-const auth = require("../models/auth.model");
-
+const Auth = require("../models/auth.model");
 
 /**
  * Authenticates a user and generates a JWT token if credentials are valid.
@@ -18,7 +17,7 @@ const loginUser = async (req, res, next) => {
     const { username, password } = req.body;
 
     try {
-        const result = await auth.searchUserByUsername(username);
+        const result = await Auth.searchUserByUsername(username);
 
         if (result.length === 0) {
             return res
@@ -34,7 +33,7 @@ const loginUser = async (req, res, next) => {
                 .json({ message: "Wrong username or password." });
         }
 
-        const token = auth.generateToken(result[0]);
+        const token = Auth.generateToken(result[0]);
 
         res.json({
             message: "Login successful.",
@@ -46,5 +45,5 @@ const loginUser = async (req, res, next) => {
 };
 
 module.exports = {
-    loginUser
+    loginUser,
 };
