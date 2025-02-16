@@ -70,10 +70,14 @@ const registerWorkdayStart = async ({ userId, start }) => {
 const registerWorkdayEnd = async ({ id, end }) => {
     const [result] = await pool.query(
         "UPDATE hours_by_date SET end = ? WHERE id = ?",
-        [id, end]
+        [end, id]
     );
 
     return result;
 };
 
-module.exports = { registerWorkdayStart, getAllHoursByMonth };
+module.exports = {
+    registerWorkdayStart,
+    registerWorkdayEnd,
+    getAllHoursByMonth,
+};

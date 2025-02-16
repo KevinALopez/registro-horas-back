@@ -96,4 +96,35 @@ const registerWorkdayStart = async (req, res, next) => {
     }
 };
 
-module.exports = { registerWorkdayStart, getAllHoursByMonth };
+const registerWorkdayEnd = async (req, res, next) => {
+    const { id, end } = req.body;
+
+    if (!dayjs(end, "YYYY-MM-DD HH:mm:ss", true).isValid()) {
+        return res.status(400).json({ message: `${end} is an invalid date.` });
+    }
+
+    try {
+        const { affectedRows } = await Hours.registerWorkdayEnd({
+            id,
+            end,
+        });
+
+        if (affectedRows === 0) {
+            return res
+                .status(404)
+                .json({ message: `There is no entry with the id ${id}. ` });
+        }
+
+        res.json({
+            message: "Workday end registered successfully",
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+module.exports = {
+    registerWorkdayStart,
+    registerWorkdayEnd,
+    getAllHoursByMonth,
+};
