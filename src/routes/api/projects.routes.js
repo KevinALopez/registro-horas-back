@@ -1,12 +1,8 @@
-const { deleteProjectById } = require('../../controllers/projects.controller');
+const { deleteProjectById } = require("../../controllers/projects.controller");
+const { checkToken } = require("../../middlewares/auth.middleware");
 
-const router = require('express').Router();
+const router = require("express").Router();
 
-router.delete('/:id', deleteProjectById)
-
-
-
-
-
+router.delete("/:id", checkToken, deleteProjectById);
 
 module.exports = router;
