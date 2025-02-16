@@ -1,8 +1,14 @@
-const express = require("express");
-const { getAllHoursByMonth } = require("../../controllers/hours.controller");
+// api/hours
 
-const router = express.Router();
+const router = require("express").Router();
 
-router.get("/:month", getAllHoursByMonth);
+const {
+    getAllHoursByMonth,
+    registerWorkdayStart,
+} = require("../../controllers/hours.controller");
+const { checkToken } = require("../../middlewares/auth.middleware");
+
+router.get("/:month", checkToken, getAllHoursByMonth);
+router.post("/start", checkToken, registerWorkdayStart);
 
 module.exports = router;

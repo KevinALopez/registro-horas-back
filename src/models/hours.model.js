@@ -2,10 +2,10 @@ const pool = require("../config/db");
 
 /**
  * Obtiene todas las horas trabajadas en un mes específico del año actual.
- * 
+ *
  * Esta función consulta la base de datos para recuperar las horas trabajadas en un mes determinado,
  * incluyendo información del usuario y del proyecto asociado.
- * 
+ *
  * @async
  * @function getAllHoursByMonth
  * @param {number} month - Número del mes a consultar (1-12).
@@ -45,11 +45,26 @@ const getAllHoursByMonth = async (month) => {
 
         return rows;
     } catch (error) {
-
         throw error;
     }
 };
+/**
+ * Registers the start of a workday for a user.
+ *
+ * @async
+ * @function registerWorkdayStart
+ * @param {Object} params - The parameters for registering workday start.
+ * @param {number} params.userId - The ID of the user.
+ * @param {string|Date} params.start - The start time of the workday.
+ * @returns {Promise<Object>} The result of the database query.
+ */
+const registerWorkdayStart = async ({ userId, start }) => {
+    const [result] = await pool.query(
+        "insert into hours_by_date (userid, start) values (?, ?)",
+        [userId, start]
+    );
 
-module.exports = {
-    getAllHoursByMonth
+    return result;
 };
+
+module.exports = { registerWorkdayStart, getAllHoursByMonth };
