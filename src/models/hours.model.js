@@ -51,19 +51,43 @@ const getAllHoursByMonth = async (month) => {
     }
 };
 
+/**
+ * Obtiene el total de horas trabajadas por usuario en una fecha específica.
+ * 
+ * Esta función consulta la base de datos para calcular la suma de horas trabajadas en un día determinado.
+ * Agrupa los resultados por usuario para evitar nombres duplicados y devuelve un array con el total de horas por usuario.
+ * 
+ * @async
+ * @function getHoursWorkedByDate
+ * @param {string} formattedDate - Fecha en formato 'YYYY-MM-DD' para consultar las horas trabajadas.
+ * @returns {Promise<Object[]|null>} Un array de objetos con las horas trabajadas por usuario o `null` si no hay registros o hay un error.
+ * - `{ hours: number, userName: string }`
+ * @throws {Error} Si ocurre un error durante la consulta a la base de datos.
+ */
 const getHoursWorkedByDate = async (formattedDate) => {
     try {
         const [rows] = await pool.query(
-            `SELECT SUM(hours) AS totalHours FROM hours_on_projects WHERE date = ?`,
+            `SELECT 
+                SUM(h.hours) AS totalHours, 
+                u.username AS userName 
+            FROM hours_on_projects h
+            JOIN users u ON h.user_id = u.id
+            WHERE h.date = ?
+            GROUP BY u.id`, // Agrupar por usuario para que no se dupliquen nombres
             [formattedDate]
         );
-
-        return rows[0]?.totalHours || 0; // Si no hay registros, devuelve 0
+        if (rows.length === 0) {
+            return null; // Si no hay registros, devolver null
+        }
+        return rows.map(row => ({
+            hours: row.totalHours || 0,
+            userName: row.userName
+        }));
     } catch (error) {
-        console.error("🔴 Error en getHoursWorkedByDate:", error);
-        return { error: "Error al obtener las horas trabajadas por fecha" };
+        return null; // Devolver null en caso de error
     }
 };
+
 
 
 
