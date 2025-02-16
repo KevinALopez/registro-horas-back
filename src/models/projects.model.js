@@ -14,6 +14,25 @@ const pool = require("../config/db");
  * - `{ affectedRows: 1 }` si el proyecto fue eliminado con éxito.
  * @throws {Error} Si ocurre un error durante la ejecución de la consulta SQL.
  */
+
+
+const updateById = async (id, { name, description, start, end, status, estimated_hours, worked_hours }) => {
+
+    const [result] = await pool.query(
+        'update projects set name = ?, description = ?, start = ?, end = ?, status = ?,estimated_hours = ?,worked_hours = ? where id = ?',
+        [name, description, start, end, status, estimated_hours, worked_hours, id]
+    );
+    return result;
+
+};
+
+const selectById = async (id) => {
+    const [result] = await pool.query('select * from projects where id = ?', [id]);
+    if (result.length === 0) return null;
+    return result[0];
+}
+
+
 const deleteProjectById = async (id) => {
     try {
         // Verificar si el proyecto existe antes de eliminarlo
@@ -37,5 +56,9 @@ const deleteProjectById = async (id) => {
 };
 
 module.exports = {
+<<<<<<< HEAD
     deleteProjectById,
+=======
+    deleteProjectById, updateById, selectById
+>>>>>>> feature_updateProjectById
 };

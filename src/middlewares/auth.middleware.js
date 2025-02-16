@@ -1,5 +1,9 @@
 const jwt = require("jsonwebtoken");
+<<<<<<< HEAD
 const User = require("../models/users.model");
+=======
+const User = require("../models/users.model")
+>>>>>>> feature_updateProjectById
 
 require("dotenv").config();
 
@@ -33,6 +37,15 @@ const checkToken = async (req, res, next) => {
     next();
 };
 
+const checkAdmin = (req, res, next) => {
+    if (req.user.role !== 'admin') {
+        return res.status(403).json({ message: 'No eres usuario ADMIN' })
+    }
+
+    next();
+}
+
+
 module.exports = {
-    checkToken,
+    checkToken, checkAdmin
 };
