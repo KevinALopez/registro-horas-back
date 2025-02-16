@@ -23,7 +23,6 @@ const pool = require("../config/db");
  */
 const getAllHoursByMonth = async (month) => {
     const currentYear = new Date().getFullYear();
-
     try {
         const [rows] = await pool.query(
             `SELECT 
@@ -45,11 +44,29 @@ const getAllHoursByMonth = async (month) => {
 
         return rows;
     } catch (error) {
+        console.error("🔴 Error en getAllHoursByMonth:", error);
+        return [];
 
-        throw error;
+
     }
 };
 
+const getHoursWorkedByDate = async (formattedDate) => {
+    try {
+        const [rows] = await pool.query(
+            `SELECT SUM(hours) AS totalHours FROM hours_on_projects WHERE date = ?`,
+            [formattedDate]
+        );
+
+        return rows[0]?.totalHours || 0; // Si no hay registros, devuelve 0
+    } catch (error) {
+        console.error("🔴 Error en getHoursWorkedByDate:", error);
+        return { error: "Error al obtener las horas trabajadas por fecha" };
+    }
+};
+
+
+
 module.exports = {
-    getAllHoursByMonth
+    getAllHoursByMonth, getHoursWorkedByDate
 };
