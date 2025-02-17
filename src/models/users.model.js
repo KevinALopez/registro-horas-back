@@ -20,8 +20,17 @@ const selectById = async (userId) => {
 
     return result[0];
 };
+const selectAll = async() => {
+    
+        const [result] = await pool.query('select * from users');
+        return result;
+   
+  
+}
+
 
 module.exports = {
     updateById,
     selectById,
+    selectAll
 };

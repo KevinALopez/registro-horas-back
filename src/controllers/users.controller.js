@@ -15,6 +15,18 @@ const updateUserById = async (req, res, next) => {
         next(error);
     }
 }
+const getAllUsers = async (req, res, next) => {
+    try {
+        const users = await User.selectAll();
+        //res.status(200).json({ message: 'GET usuarios' });
+        res.json(users);
+    } catch (error) {
+        console.error('Error obteniendo usuarios:', error); // Mostrar errores en la consola
+        res.status(500).json({ error: 'Server error, please try again later.' });
+    }
+   
+}
 module.exports = {
-    updateUserById
+    updateUserById,
+    getAllUsers
 }
