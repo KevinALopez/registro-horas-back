@@ -1,5 +1,6 @@
 const bcrypt = require("bcryptjs");
-const User = require("../models/users.model")
+const User = require("../models/users.model");
+
 
 const updateUserById = async (req, res, next) => {
     const { userId } = req.params;
@@ -87,6 +88,21 @@ const deleteUserById = async (req, res) => {
     }
 };
 
+
+const userExists = async (id) => {
+
+    //función que permite comprobar que un usuarioExiste en la BBDD
+
+    try {
+        const user = await User.selectById(id);
+
+        if (!user) return true
+
+        return false;
+    } catch (error) {
+        next(error);
+    }
+}
 module.exports = {
-    updateUserById, getAnUserById, getAllUsers, deleteUserById
+    getAllUsers, getAnUserById, deleteUserById, updateUserById, userExists
 }

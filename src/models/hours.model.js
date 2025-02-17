@@ -114,9 +114,20 @@ const getHoursWorkedByDate = async (formattedDate) => {
     }
 };
 
+
+const registerHoursOnProject = async ({ hours, date, userId, projectId }) => {
+
+    const [result] = await pool.query(
+        'insert into hours_on_projects (hours,date,user_id, project_id) values (?,?,?,?)',
+        [hours, date, userId, projectId]
+    );
+    return result;
+
+}
+
+
+
+
 module.exports = {
-    getAllHoursByMonth,
-    getHoursWorkedByDate,
-    registerWorkdayEnd,
-    registerWorkdayStart,
+    getAllHoursByMonth, getHoursWorkedByDate, registerWorkdayStart, registerWorkdayEnd, registerHoursOnProject
 };

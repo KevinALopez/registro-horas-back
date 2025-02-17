@@ -63,8 +63,24 @@ const getAllProjects = async (req, res, next) => {
     }
 };
 
+const projectExists = async (id) => {
+
+    //función que permite comprobar que un proyecto existe en la BBDD
+
+    try {
+        const project = await Project.selectById(id);
+
+        if (!project) return true
+
+        return false;
+    } catch (error) {
+        next(error);
+    }
+}
+
 module.exports = {
     deleteProjectById,
     updateProjectById,
     getAllProjects,
+    projectExists
 };
