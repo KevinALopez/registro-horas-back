@@ -24,9 +24,32 @@ const getAllUsers = async (req, res, next) => {
         console.error('Error obteniendo usuarios:', error); // Mostrar errores en la consola
         res.status(500).json({ error: 'Server error, please try again later.' });
     }
-   
+
 }
+
+
+const getAnUserById = async (req, res, next) => {
+    const { id } = req.params;
+
+
+    if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid ID format" });
+    }
+
+    try {
+        const results = await User.getAnUserById(id)
+
+        if (results.length === 0) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        // Devolver el usuario encontrado
+        res.status(200).json(results);
+    } catch (error) {
+        next(error)
+    }
+};
+
 module.exports = {
-    updateUserById,
-    getAllUsers
+    updateUserById, getAnUserById, getAllUsers
 }
