@@ -14,8 +14,6 @@ const pool = require("../config/db");
  * - `{ affectedRows: 1 }` si el proyecto fue eliminado con éxito.
  * @throws {Error} Si ocurre un error durante la ejecución de la consulta SQL.
  */
-
-
 const updateById = async (id, { name, description, start, end, status, estimated_hours, worked_hours }) => {
 
     const [result] = await pool.query(
