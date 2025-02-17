@@ -53,6 +53,12 @@ const updateProjectById = async (req, res, next) => {
     }
 }
 
+
+const createNewProject = async (req, res, next) => {
+
+}
+
+
 module.exports = {
-    deleteProjectById, updateProjectById
+    deleteProjectById, updateProjectById, createNewProject
 };
