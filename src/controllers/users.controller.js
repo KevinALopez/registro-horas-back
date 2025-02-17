@@ -15,6 +15,30 @@ const updateUserById = async (req, res, next) => {
         next(error);
     }
 }
+
+
+const getAnUserById = async (req, res, next) => {
+    const { id } = req.params;
+
+
+    if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid ID format" });
+    }
+
+    try {
+        const results = await getAnUserById(id)
+
+        if (results.length === 0) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        // Devolver el usuario encontrado
+        res.status(200).json(results[0]);
+    } catch (error) {
+        next(error)
+    }
+};
+
 module.exports = {
-    updateUserById
+    updateUserById, getAnUserById
 }

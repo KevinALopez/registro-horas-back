@@ -21,7 +21,14 @@ const selectById = async (userId) => {
     return result[0];
 };
 
+const getAnUserById = async (id) => {
+    const query = "SELECT id, username, email, role, contract FROM users WHERE id = ?";
+    const [results] = await pool.query(query, [id]);
+    return results
+}
+
 module.exports = {
     updateById,
     selectById,
+    getAnUserById
 };
