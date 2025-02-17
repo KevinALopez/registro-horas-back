@@ -2,6 +2,9 @@ const customPasrseFormat = require("dayjs/plugin/customParseFormat");
 const dayjs = require("dayjs");
 dayjs.extend(customPasrseFormat);
 
+
+const User = require("../controllers/users.controller");
+const Project = require("../controllers/projects.controller");
 const Hours = require("../models/hours.model");
 
 
@@ -183,6 +186,9 @@ const registerHoursOnProject = async (req, res, next) => {
 
     if (!dayjs(date, "YYYY-MM-DD", true).isValid()) {
         return res.status(400).json({ message: `${date} is an invalid date.` });
+    }
+    if(User.userExists){
+        
     }
 
     try {
