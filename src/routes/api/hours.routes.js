@@ -1,4 +1,5 @@
-// api/hours
+const express = require("express");
+const { getAllHoursByMonth, getHoursWorkedByDate } = require("../../controllers/hours.controller");
 
 const router = require("express").Router();
 
