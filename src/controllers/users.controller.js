@@ -50,6 +50,43 @@ const getAnUserById = async (req, res, next) => {
     }
 };
 
+/**
+ * Maneja la eliminación de un usuario por su ID desde una solicitud HTTP.
+ * 
+ * Esta función recibe el ID del usuario desde los parámetros de la URL, valida que sea un número válido 
+ * y llama a `User.deleteUserById(userId)` para eliminarlo de la base de datos. 
+ * Devuelve una respuesta JSON indicando el resultado de la operación.
+ * 
+ * @async
+ * @function deleteUserById
+ * @param {Object} req - Objeto de solicitud de Express.
+ * @param {Object} req.params - Parámetros de la URL.
+ * @param {string} req.params.id - ID del usuario a eliminar.
+ * @param {Object} res - Objeto de respuesta de Express.
+ * @returns {Promise<void>} Envía una respuesta JSON con el resultado de la eliminación.
+ * @throws {Error} Si ocurre un error durante la consulta a la base de datos.
+ */
+const deleteUserById = async (req, res) => {
+    const { id } = req.params;
+    // Validar que el ID es un número válido
+    const userId = parseInt(id, 10);
+    if (isNaN(userId) || userId <= 0) {
+        return res.status(400).json({ message: "Invalid user ID." });
+    }
+
+    try {
+        const result = await User.deleteUserById(userId);
+
+        if (result.error) {
+            return res.status(404).json({ message: result.error });
+        }
+        res.status(200).json({ message: result.message });
+
+    } catch (error) {
+        res.status(500).json({ message: "Server error, please try again later." });
+    }
+};
+
 module.exports = {
-    updateUserById, getAnUserById, getAllUsers
+    updateUserById, getAnUserById, getAllUsers, deleteUserById
 }
