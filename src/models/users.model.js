@@ -11,6 +11,7 @@ const updateById = async (
 
     return result;
 };
+
 const selectById = async (userId) => {
     const [result] = await pool.query("select * from users where id = ?", [
         userId,
@@ -20,24 +21,32 @@ const selectById = async (userId) => {
 
     return result[0];
 };
+
 const selectAll = async () => {
-
-    const [result] = await pool.query('select * from users');
+    const [result] = await pool.query("select * from users");
     return result;
-
-
-}
-
+};
 
 const getAnUserById = async (id) => {
-    const query = "SELECT id, username, email, role, contract FROM users WHERE id = ?";
+    const query =
+        "SELECT id, username, email, role, contract FROM users WHERE id = ?";
     const [results] = await pool.query(query, [id]);
-    return results
-}
+    return results;
+};
+
+const createNewUser = async ({ username, email, password, role, contract }) => {
+    const [result] = await pool.query(
+        "insert into users (username, email, password, role, contract) values (?, ?, ?, ?, ?)",
+        [username, email, password, role, contract]
+    );
+
+    return result;
+};
 
 module.exports = {
     updateById,
     selectById,
     selectAll,
-    getAnUserById
+    getAnUserById,
+    createNewUser,
 };
