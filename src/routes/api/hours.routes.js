@@ -1,9 +1,4 @@
-<<<<<<< HEAD
 // api/hours
-=======
-const express = require("express");
-const { getAllHoursByMonth, getHoursWorkedByDate } = require("../../controllers/hours.controller");
->>>>>>> feature-GetHoursWorkedByDate
 
 const router = require("express").Router();
 
@@ -11,6 +6,7 @@ const {
     getAllHoursByMonth,
     registerWorkdayStart,
     registerWorkdayEnd,
+    getHoursWorkedByDate,
 } = require("../../controllers/hours.controller");
 
 const { checkToken } = require("../../middlewares/auth.middleware");
