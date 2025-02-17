@@ -181,23 +181,30 @@ const getHoursWorkedByDate = async (req, res) => {
 
 
 const registerHoursOnProject = async (req, res, next) => {
-
-    const { date } = req.body;
+    const { date, projectId, userId } = req.body;
 
     if (!dayjs(date, "YYYY-MM-DD", true).isValid()) {
         return res.status(400).json({ message: `${date} is an invalid date.` });
     }
-    if(User.userExists){
-        
-    }
 
     try {
+        const userExists = await User.userExists(userId);
+        const projectExists = await Project.projectExists(projectId);
+
+        if (userExists) {
+            return res.status(404).json({ message: `User with id ${userId} does not exist.` });
+        }
+
+        if (projectExists) {
+            return res.status(404).json({ message: `Project with id ${projectId} does not exist.` });
+        }
+
         const result = await Hours.registerHoursOnProject(req.body);
-        res.json({ message: 'Hours assigned succesfully' });
+        res.json({ message: 'Hours assigned successfully' });
     } catch (error) {
         next(error);
     }
-}
+};
 
 
 

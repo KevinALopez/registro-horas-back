@@ -16,15 +16,18 @@ const updateUserById = async (req, res, next) => {
         next(error);
     }
 }
-const userExists = async (req, res, next) => {
+const userExists = async (id) => {
 
-    const { userId } = req.params;
+    //función que permite comprobar que un usuarioExiste en la BBDD
 
     try {
-        const user = await User.selectById(userId);
-        return true;
-    } catch (error) {
+        const user = await User.selectById(id);
+
+        if (!user) return true
+
         return false;
+    } catch (error) {
+        next(error);
     }
 }
 module.exports = {
