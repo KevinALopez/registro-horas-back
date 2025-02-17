@@ -78,6 +78,32 @@ const projectExists = async (id) => {
     }
 }
 
+
+
+const createNewProject = async (req, res, next) => {
+
+    try {
+        const project = await Project.selectByName(req.body.name)
+
+        if (project) {
+            return res.status(400).json({
+                message: "Este proyecto ya existe",
+
+            })
+        }
+        const result = await Project.createNewProject(req.body);
+        res.status(200).json({
+            message: "New poject created succesfuly.",
+            projectId: result.insertId
+        });
+
+
+    } catch (error) {
+
+        next(error);
+    }
+}
+
 module.exports = {
     deleteProjectById,
     updateProjectById,

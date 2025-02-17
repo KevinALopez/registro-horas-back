@@ -70,9 +70,46 @@ const getAllProjects = async () => {
     return result;
 };
 
+
+/**
+ * @async
+ * @function selectByName
+ * @param {string} projectName
+ * @returns {Promise<Object|null>}
+ * @throws {Error}
+ */
+const selectByName = async (projectName) => {
+    const [result] = await pool.query('select * from projects where name = ?', [projectName]);
+
+    if (result.length === 0) return null;
+    return result[0];
+}
+
+const createNewProject = async ({ name,
+    description,
+    start,
+    end,
+    status,
+    estimatedHours,
+    workedHours }) => {
+
+    const [result] = await pool.query(
+        'insert into projects (name, description, start, end, status, estimated_hours, worked_hours) values (?, ?, ?, ?, ?, ?, ?)',
+        [name,
+            description,
+            start,
+            end,
+            status,
+            estimatedHours,
+            workedHours]
+    );
+
+
+
+    return result;
+}
+
+
 module.exports = {
-    deleteProjectById,
-    updateById,
-    selectById,
-    getAllProjects,
+    deleteProjectById, updateById, selectById, createNewProject, selectByName, getAllProjects
 };
