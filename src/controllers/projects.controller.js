@@ -53,6 +53,18 @@ const updateProjectById = async (req, res, next) => {
     }
 }
 
+const projectExists = async (req, res, next) => {
+    const { id } = req.params;
+
+    try {
+        const project = await Project.selectById(id);
+        return true;
+    } catch (error) {
+        next(error);
+        return false;
+    }
+}
+
 module.exports = {
-    deleteProjectById, updateProjectById
+    deleteProjectById, updateProjectById, projectExists
 };

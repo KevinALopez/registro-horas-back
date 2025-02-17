@@ -1,5 +1,6 @@
 const bcrypt = require("bcryptjs");
-const User = require("../models/users.model")
+const User = require("../models/users.model");
+
 
 const updateUserById = async (req, res, next) => {
     const { userId } = req.params;
@@ -15,6 +16,17 @@ const updateUserById = async (req, res, next) => {
         next(error);
     }
 }
+const userExists = async (req, res, next) => {
+
+    const { userId } = req.params;
+
+    try {
+        const user = await User.selectById(userId);
+        return true;
+    } catch (error) {
+        return false;
+    }
+}
 module.exports = {
-    updateUserById
+    updateUserById, userExists
 }

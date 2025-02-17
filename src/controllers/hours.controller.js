@@ -177,8 +177,28 @@ const getHoursWorkedByDate = async (req, res) => {
 };
 
 
+const registerHoursOnProject = async (req, res, next) => {
+
+    const { date } = req.body;
+
+    if (!dayjs(date, "YYYY-MM-DD", true).isValid()) {
+        return res.status(400).json({ message: `${date} is an invalid date.` });
+    }
+
+    try {
+        const result = await Hours.registerHoursOnProject(req.body);
+        res.json({ message: 'Hours assigned succesfully' });
+    } catch (error) {
+        next(error);
+    }
+}
+
+
+
+
+
 
 
 module.exports = {
-    getAllHoursByMonth, getHoursWorkedByDate
+    getAllHoursByMonth, getHoursWorkedByDate, registerWorkdayStart, registerWorkdayEnd, registerHoursOnProject
 };
