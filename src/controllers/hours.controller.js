@@ -4,7 +4,6 @@ dayjs.extend(customPasrseFormat);
 
 const Hours = require("../models/hours.model");
 
-
 const getFormattedDate = (dateString) => {
     const parts = dateString.split("-");
     if (parts.length !== 3) return null;
@@ -12,8 +11,6 @@ const getFormattedDate = (dateString) => {
     const [year, month, day] = parts;
     return `${year}-${month}-${day}`; //Devuelve en formato YYYY-MM-DD
 };
-
-
 
 /**
  * Obtiene todas las horas trabajadas en un mes específico.
@@ -136,11 +133,11 @@ const registerWorkdayEnd = async (req, res, next) => {
 
 /**
  * Obtiene el total de horas trabajadas por usuario en una fecha específica.
- * 
+ *
  * Esta función recibe una fecha desde el cuerpo de la solicitud (`req.body.date`),
  * la valida y la convierte al formato `YYYY-MM-DD`. Luego consulta la base de datos
  * para recuperar las horas trabajadas en esa fecha, agrupadas por usuario.
- * 
+ *
  * @async
  * @function getHoursWorkedByDate
  * @param {Object} req - Objeto de solicitud de Express.
@@ -151,7 +148,6 @@ const registerWorkdayEnd = async (req, res, next) => {
  * @throws {Error} Si ocurre un error durante la consulta a la base de datos.
  */
 const getHoursWorkedByDate = async (req, res) => {
-
     const { date } = req.body;
     // Verificar si se recibió una fecha
     if (!date) {
@@ -162,23 +158,29 @@ const getHoursWorkedByDate = async (req, res) => {
 
     // Validar que la conversión fue exitosa
     if (!formattedDate || !/^\d{4}-\d{2}-\d{2}$/.test(formattedDate)) {
-        return res.status(400).json({ message: "Invalid date format. Use YYYY-MM-DD." });
+        return res
+            .status(400)
+            .json({ message: "Invalid date format. Use YYYY-MM-DD." });
     }
     try {
         // Obtener datos desde el modelo
         const workData = await HoursModel.getHoursWorkedByDate(formattedDate);
         if (!workData || workData.length === 0) {
-            return res.status(404).json({ message: "No hours found for the selected date." });
+            return res
+                .status(404)
+                .json({ message: "No hours found for the selected date." });
         }
         res.status(200).json({ data: workData });
     } catch (error) {
-        res.status(500).json({ message: "Server error, please try again later." });
+        res.status(500).json({
+            message: "Server error, please try again later.",
+        });
     }
 };
 
-
-
-
 module.exports = {
-    getAllHoursByMonth, getHoursWorkedByDate,registerWorkdayEnd,registerWorkdayStart
+    getAllHoursByMonth,
+    getHoursWorkedByDate,
+    registerWorkdayEnd,
+    registerWorkdayStart,
 };

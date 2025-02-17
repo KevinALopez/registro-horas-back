@@ -46,10 +46,9 @@ const getAllHoursByMonth = async (month) => {
     } catch (error) {
         console.error("🔴 Error en getAllHoursByMonth:", error);
         return [];
-
-
     }
 };
+
 /**
  * Registers the start of a workday for a user.
  *
@@ -106,18 +105,18 @@ const getHoursWorkedByDate = async (formattedDate) => {
         if (rows.length === 0) {
             return null; // Si no hay registros, devolver null
         }
-        return rows.map(row => ({
+        return rows.map((row) => ({
             hours: row.totalHours || 0,
-            userName: row.userName
+            userName: row.userName,
         }));
     } catch (error) {
         return null; // Devolver null en caso de error
     }
 };
 
-
-
-
 module.exports = {
-    getAllHoursByMonth, getHoursWorkedByDate
+    getAllHoursByMonth,
+    getHoursWorkedByDate,
+    registerWorkdayEnd,
+    registerWorkdayStart,
 };
