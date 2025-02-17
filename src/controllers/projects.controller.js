@@ -40,19 +40,31 @@ const deleteProjectById = async (req, res) => {
 };
 
 const updateProjectById = async (req, res, next) => {
-
     const { id } = req.params;
 
     try {
-
         await Project.updateById(id, req.body);
-        const updatedProject = await Project.selectById(id);//se busca el id del proyecto a actualizar llamando a la función selectById
-        res.json({ message: 'Project update succesfull', updatedProject });
+        const updatedProject = await Project.selectById(id); //se busca el id del proyecto a actualizar llamando a la función selectById
+        res.json({ message: "Project update succesfull", updatedProject });
     } catch (error) {
         next(error);
     }
-}
+};
+
+const getAllProjects = async (req, res, next) => {
+    try {
+        const result = await Project.getAllProjects();
+
+        res.json({
+            data: result,
+        });
+    } catch (error) {
+        next(error);
+    }
+};
 
 module.exports = {
-    deleteProjectById, updateProjectById
+    deleteProjectById,
+    updateProjectById,
+    getAllProjects,
 };
