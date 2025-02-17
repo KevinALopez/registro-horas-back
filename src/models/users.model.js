@@ -11,6 +11,7 @@ const updateById = async (
 
     return result;
 };
+
 const selectById = async (userId) => {
     const [result] = await pool.query("select * from users where id = ?", [
         userId,
@@ -20,27 +21,34 @@ const selectById = async (userId) => {
 
     return result[0];
 };
+
 const selectAll = async () => {
-
-    const [result] = await pool.query('select * from users');
+    const [result] = await pool.query("select * from users");
     return result;
-
-
-}
-
+};
 
 const getAnUserById = async (id) => {
-    const query = "SELECT id, username, email, role, contract FROM users WHERE id = ?";
+    const query =
+        "SELECT id, username, email, role, contract FROM users WHERE id = ?";
     const [results] = await pool.query(query, [id]);
-    return results
-}
+    return results;
+};
+
+const createNewUser = async ({ username, email, password, role, contract }) => {
+    const [result] = await pool.query(
+        "insert into users (username, email, password, role, contract) values (?, ?, ?, ?, ?)",
+        [username, email, password, role, contract]
+    );
+
+    return result;
+};
 
 /**
  * Elimina un usuario de la base de datos por su ID.
- * 
+ *
  * Esta función busca un usuario en la base de datos utilizando su ID y lo elimina si existe.
  * Si el usuario no se encuentra, devuelve un mensaje de error.
- * 
+ *
  * @async
  * @function deleteUserById
  * @param {number} userId - Identificador único del usuario a eliminar.
@@ -51,10 +59,9 @@ const getAnUserById = async (id) => {
  */
 const deleteUserById = async (userId) => {
     try {
-        const [result] = await pool.query(
-            `DELETE FROM users WHERE id = ?`,
-            [userId]
-        );
+        const [result] = await pool.query(`DELETE FROM users WHERE id = ?`, [
+            userId,
+        ]);
 
         if (result.affectedRows === 0) {
             return { error: "User not found" };
@@ -67,11 +74,11 @@ const deleteUserById = async (userId) => {
     }
 };
 
-
 module.exports = {
     updateById,
     selectById,
     selectAll,
     getAnUserById,
-    deleteUserById
+    deleteUserById,
+    createNewUser,
 };
