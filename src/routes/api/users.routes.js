@@ -1,6 +1,6 @@
-const { updateUserById, } = require('../../controllers/users.controller');
-const { checkToken } = require('../../middlewares/auth.middleware');
-const { getAnUserById } = require('../../models/users.model');
+const { updateUserById, getAnUserById } = require('../../controllers/users.controller');
+const { checkToken, } = require('../../middlewares/auth.middleware');
+
 
 
 
