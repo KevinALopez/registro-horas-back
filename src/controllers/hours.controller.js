@@ -180,5 +180,5 @@ const getHoursWorkedByDate = async (req, res) => {
 
 
 module.exports = {
-    getAllHoursByMonth, getHoursWorkedByDate
+    getAllHoursByMonth, getHoursWorkedByDate, registerWorkdayStart, registerWorkdayEnd
 };
