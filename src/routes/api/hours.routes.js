@@ -15,5 +15,6 @@ router.post("/start", checkToken, registerWorkdayStart);
 router.post("/end", checkToken, registerWorkdayEnd);
 
 router.post("/", getHoursWorkedByDate);
+router.post('/', checkToken, getHoursWorkedByDate);
 
 module.exports = router;
