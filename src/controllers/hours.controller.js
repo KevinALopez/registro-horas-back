@@ -32,9 +32,6 @@ const getFormattedDate = (dateString) => {
  */
 const getAllHoursByMonth = async (req, res) => {
     const { month, year } = req.params;
-
-    console.log(`📥 Recibida solicitud GET /api/hours/${month}/${year}`);
-
     // Validar que mes y año sean números válidos
     const parsedMonth = Number(month);
     const parsedYear = Number(year);
@@ -172,28 +169,25 @@ const getHoursWorkedByDate = async (req, res) => {
     }
     // Convertir la fecha al formato MySQL (YYYY-MM-DD)
     const formattedDate = getFormattedDate(date);
-
     // Validar que la conversión fue exitosa
-    if (!formattedDate || !/^\d{4}-\d{2}-\d{2}$/.test(formattedDate)) {
-        return res
-            .status(400)
-            .json({ message: "Invalid date format. Use YYYY-MM-DD." });
+    if (!formattedDate) {
+        return res.status(400).json({ message: "Invalid date format. Use DD-MM-YYYY." });
     }
     try {
         // Obtener datos desde el modelo
-        const workData = await HoursModel.getHoursWorkedByDate(formattedDate);
+        const workData = await Hours.getHoursWorkedByDate(formattedDate);
+
         if (!workData || workData.length === 0) {
-            return res
-                .status(404)
-                .json({ message: "No hours found for the selected date." });
+            return res.status(404).json({ message: "No hours found for the selected date." });
         }
         res.status(200).json({ data: workData });
+
     } catch (error) {
-        res.status(500).json({
-            message: "Server error, please try again later.",
-        });
+        console.error("❌ Error en getHoursWorkedByDate:", error);
+        res.status(500).json({ message: "Server error, please try again later." });
     }
 };
+
 
 const registerHoursOnProject = async (req, res, next) => {
     const { date, projectId, userId } = req.body;
