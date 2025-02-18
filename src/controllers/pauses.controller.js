@@ -6,8 +6,19 @@ const insertPause = async (req, res, next) => {
     try {
         const result = await Pause.insertPause({ ...req.body, user_id });
         res.json({
-            message: "Pause start registrada correctamente",
+            message: "Pause started",
             id: result.insertId,
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+const UpdatePause = async (req, res,next) => {
+    try {
+        const result = await Pause.UpdatePause(req.body);
+        res.json({
+            message: "Pause end",
+            
         });
     } catch (error) {
         next(error);
@@ -16,4 +27,6 @@ const insertPause = async (req, res, next) => {
 
 module.exports = {
     insertPause,
-};
+    UpdatePause
+}
+
