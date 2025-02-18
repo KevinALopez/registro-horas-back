@@ -64,50 +64,61 @@ const getAllProjects = async (req, res, next) => {
 };
 
 const projectExists = async (id) => {
-
     //función que permite comprobar que un proyecto existe en la BBDD
 
     try {
         const project = await Project.selectById(id);
 
-        if (!project) return true
+        if (!project) return true;
 
         return false;
     } catch (error) {
         next(error);
     }
-}
-
-
+};
 
 const createNewProject = async (req, res, next) => {
-
     try {
-        const project = await Project.selectByName(req.body.name)
+        const project = await Project.selectByName(req.body.name);
 
         if (project) {
             return res.status(400).json({
                 message: "Este proyecto ya existe",
-
-            })
+            });
         }
         const result = await Project.createNewProject(req.body);
         res.status(200).json({
             message: "New poject created succesfuly.",
-            projectId: result.insertId
+            projectId: result.insertId,
         });
-
-
     } catch (error) {
-
         next(error);
     }
-}
+};
+
+const getProjectById = async (req, res, next) => {
+    const { id } = req.params;
+
+    try {
+        const result = await Project.selectById(id);
+
+        if (!result) {
+            res.status(404).json({
+                message: "Project not found",
+            });
+        }
+
+        res.json(result);
+    } catch (error) {
+        next(error);
+    }
+};
 
 module.exports = {
     deleteProjectById,
     updateProjectById,
     getAllProjects,
     projectExists,
-    createNewProject
+    createNewProject,
+    getProjectById,
 };

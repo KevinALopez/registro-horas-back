@@ -2,7 +2,6 @@ const customPasrseFormat = require("dayjs/plugin/customParseFormat");
 const dayjs = require("dayjs");
 dayjs.extend(customPasrseFormat);
 
-
 const User = require("../controllers/users.controller");
 const Project = require("../controllers/projects.controller");
 const Hours = require("../models/hours.model");
@@ -196,8 +195,6 @@ const getHoursWorkedByDate = async (req, res) => {
     }
 };
 
-
-
 const registerHoursOnProject = async (req, res, next) => {
     const { date, projectId, userId } = req.body;
 
@@ -210,26 +207,28 @@ const registerHoursOnProject = async (req, res, next) => {
         const projectExists = await Project.projectExists(projectId);
 
         if (userExists) {
-            return res.status(404).json({ message: `User with id ${userId} does not exist.` });
+            return res
+                .status(404)
+                .json({ message: `User with id ${userId} does not exist.` });
         }
 
         if (projectExists) {
-            return res.status(404).json({ message: `Project with id ${projectId} does not exist.` });
+            return res.status(404).json({
+                message: `Project with id ${projectId} does not exist.`,
+            });
         }
 
         const result = await Hours.registerHoursOnProject(req.body);
-        res.json({ message: 'Hours assigned successfully' });
+        res.json({ message: "Hours assigned successfully" });
     } catch (error) {
         next(error);
     }
 };
 
-
-
-
-
-
-
 module.exports = {
-    getAllHoursByMonth, getHoursWorkedByDate, registerWorkdayStart, registerWorkdayEnd, registerHoursOnProject
+    getAllHoursByMonth,
+    getHoursWorkedByDate,
+    registerWorkdayStart,
+    registerWorkdayEnd,
+    registerHoursOnProject,
 };

@@ -39,6 +39,7 @@ const selectById = async (id) => {
         id,
     ]);
     if (result.length === 0) return null;
+
     return result[0];
 };
 
@@ -70,7 +71,6 @@ const getAllProjects = async () => {
     return result;
 };
 
-
 /**
  * @async
  * @function selectByName
@@ -79,37 +79,36 @@ const getAllProjects = async () => {
  * @throws {Error}
  */
 const selectByName = async (projectName) => {
-    const [result] = await pool.query('select * from projects where name = ?', [projectName]);
+    const [result] = await pool.query("select * from projects where name = ?", [
+        projectName,
+    ]);
 
     if (result.length === 0) return null;
     return result[0];
-}
+};
 
-const createNewProject = async ({ name,
+const createNewProject = async ({
+    name,
     description,
     start,
     end,
     status,
     estimatedHours,
-    workedHours }) => {
-
+    workedHours,
+}) => {
     const [result] = await pool.query(
-        'insert into projects (name, description, start, end, status, estimated_hours, worked_hours) values (?, ?, ?, ?, ?, ?, ?)',
-        [name,
-            description,
-            start,
-            end,
-            status,
-            estimatedHours,
-            workedHours]
+        "insert into projects (name, description, start, end, status, estimated_hours, worked_hours) values (?, ?, ?, ?, ?, ?, ?)",
+        [name, description, start, end, status, estimatedHours, workedHours]
     );
 
-
-
     return result;
-}
-
+};
 
 module.exports = {
-    deleteProjectById, updateById, selectById, createNewProject, selectByName, getAllProjects
+    deleteProjectById,
+    updateById,
+    selectById,
+    createNewProject,
+    selectByName,
+    getAllProjects,
 };
