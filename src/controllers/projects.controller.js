@@ -108,5 +108,6 @@ module.exports = {
     deleteProjectById,
     updateProjectById,
     getAllProjects,
-    projectExists
+    projectExists,
+    createNewProject
 };
