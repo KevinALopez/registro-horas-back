@@ -32,22 +32,34 @@ const getFormattedDate = (dateString) => {
  * @throws {Error} Si ocurre un error durante la consulta a la base de datos.
  */
 const getAllHoursByMonth = async (req, res) => {
-    const { month } = req.params;
-    // Validar que el mes sea un número válido (1-12)
-    const parsedMonth = parseInt(month, 10);
-    if (isNaN(parsedMonth) || parsedMonth < 1 || parsedMonth > 12) {
+    const { month, year } = req.params;
+
+    console.log(`📥 Recibida solicitud GET /api/hours/${month}/${year}`);
+
+    // Validar que mes y año sean números válidos
+    const parsedMonth = Number(month);
+    const parsedYear = Number(year);
+
+    if (!Number.isInteger(parsedMonth) || parsedMonth < 1 || parsedMonth > 12) {
         return res.status(400).json({
             message: "Invalid month. Please provide a number between 1 and 12.",
         });
     }
+
+    if (!Number.isInteger(parsedYear) || parsedYear < 2000 || parsedYear > 2100) {
+        return res.status(400).json({
+            message: "Invalid year. Please provide a valid year (2000-2100).",
+        });
+    }
+
     try {
-        const hours = await Hours.getAllHoursByMonth(parsedMonth);
-        // Validar si `hours` es null, undefined o un array vacío
+        const hours = await Hours.getAllHoursByMonth(parsedMonth, parsedYear);
+
         if (!Array.isArray(hours) || hours.length === 0) {
-            return res
-                .status(404)
-                .json({ message: "No hours found for the selected month." });
+            return res.status(404).json({ message: "No hours found for the selected month and year." });
         }
+
+        // Formatear la respuesta antes de enviarla
         const formattedData = hours.map((row) => ({
             id: row.id,
             hours: row.hours,
@@ -64,13 +76,16 @@ const getAllHoursByMonth = async (req, res) => {
             },
         }));
 
+        console.log(`✅ Datos encontrados:`, formattedData);
+
         res.status(200).json({ data: formattedData });
+
     } catch (error) {
-        res.status(500).json({
-            message: "Server error, please try again later.",
-        });
+        console.error("❌ Error en getAllHoursByMonthAndYear:", error);
+        res.status(500).json({ message: "Server error, please try again later." });
     }
 };
+
 
 /**
  * Registers the start of a workday for a user and responds to the client.
