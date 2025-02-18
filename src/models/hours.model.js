@@ -21,14 +21,13 @@ const pool = require("../config/db");
  * - `status`: Estado del proyecto.
  * @throws {Error} Si ocurre un error durante la consulta a la base de datos.
  */
-const getAllHoursByMonth = async (month) => {
-    const currentYear = new Date().getFullYear();
+const getAllHoursByMonth = async (month, year) => {
     try {
         const [rows] = await pool.query(
             `SELECT 
                 h.id, 
                 h.hours, 
-                DATE_FORMAT(h.date, '%d-%m-%Y') AS dateTime,
+                DATE_FORMAT(h.date, '%Y-%m-%d') AS dateTime,
                 u.id AS userId, 
                 u.username, 
                 u.contract,
@@ -39,12 +38,12 @@ const getAllHoursByMonth = async (month) => {
             JOIN users u ON h.user_id = u.id
             JOIN projects p ON h.project_id = p.id
             WHERE MONTH(h.date) = ? AND YEAR(h.date) = ?`,
-            [month, currentYear]
+            [month, year]
         );
 
         return rows;
     } catch (error) {
-        console.error("🔴 Error en getAllHoursByMonth:", error);
+        console.error("🔴 Error en getAllHoursByMonthAndYear:", error);
         return [];
     }
 };
