@@ -5,10 +5,11 @@ const {
 
 } = require("../../controllers/projects.controller");
 const { checkToken, checkAdmin } = require("../../middlewares/auth.middleware");
-const { createNewProject } = require("../../models/projects.model");
+const { createNewProject, selectById } = require("../../models/projects.model");
 
 const router = require("express").Router();
 
+router.get("/:id", selectById);
 router.delete("/:id", checkToken, deleteProjectById);
 router.put("/:id", checkToken, checkAdmin, updateProjectById);
 router.get("", checkToken, getAllProjects);
