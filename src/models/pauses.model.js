@@ -9,6 +9,16 @@ const insertPause = async ({ user_id, start}) => {
     return result;
 }
 
-module.exports = {
-    insertPause
+const UpdatePause = async ({ id, end}) => {
+    const [result] = await pool.query(
+        'UPDATE pause SET end = ? WHERE id = ?',
+        [end, id]
+    );
+    return result;
 }
+
+module.exports = {
+    insertPause,
+    UpdatePause
+}
+;

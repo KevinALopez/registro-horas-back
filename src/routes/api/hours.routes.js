@@ -9,6 +9,7 @@ const {
 } = require("../../controllers/hours.controller");
 const {
     insertPause,
+    UpdatePause
 } = require("../../controllers/pauses.controller");
 const { checkToken } = require("../../middlewares/auth.middleware");
 
@@ -18,6 +19,7 @@ router.post("/end", checkToken, registerWorkdayEnd);
 router.post("/projects", checkToken, registerHoursOnProject);
 
 router.post("/pause/start",checkToken, insertPause);
+router.patch("/pause/end",checkToken, UpdatePause);
 
 router.post("/", getHoursWorkedByDate);
 router.post('/', checkToken, getHoursWorkedByDate);
