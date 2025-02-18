@@ -3,9 +3,10 @@ const {
     updateProjectById,
     getAllProjects,
     getProjectById,
+    createNewProject
 } = require("../../controllers/projects.controller");
 const { checkToken, checkAdmin } = require("../../middlewares/auth.middleware");
-const { createNewProject, selectById } = require("../../models/projects.model");
+
 
 const router = require("express").Router();
 
