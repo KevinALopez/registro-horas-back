@@ -8,7 +8,7 @@ const { getAllHoursByMonth, getHoursWorkedByDate, registerWorkdayStart,
 
 const { checkToken } = require("../../middlewares/auth.middleware");
 
-router.get("/:month", checkToken, getAllHoursByMonth);
+router.get("/:month/:year", checkToken, getAllHoursByMonth);
 router.post("/start", checkToken, registerWorkdayStart);
 router.post("/end", checkToken, registerWorkdayEnd);
 router.post("/projects", checkToken, registerHoursOnProject);
