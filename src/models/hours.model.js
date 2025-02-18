@@ -102,16 +102,19 @@ const getHoursWorkedByDate = async (formattedDate) => {
             [formattedDate]
         );
         if (rows.length === 0) {
-            return null; // Si no hay registros, devolver null
+            console.warn(`⚠️ No se encontraron registros para la fecha: ${formattedDate}`);
+            return [];
         }
         return rows.map((row) => ({
             hours: row.totalHours || 0,
-            userName: row.userName,
+            userName: row.userName || "Unknown User",
         }));
     } catch (error) {
-        return null; // Devolver null en caso de error
+        console.error("❌ Error en getHoursWorkedByDate:", error);
+        throw error;
     }
 };
+
 
 
 const registerHoursOnProject = async ({ hours, date, userId, projectId }) => {
