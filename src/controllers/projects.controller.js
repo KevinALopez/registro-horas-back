@@ -108,7 +108,8 @@ const getProjectById = async (req, res, next) => {
             });
         }
 
-        res.json(result);
+        res.json({ id: result.id, name: result.name, description: result.description, start: result.start, end: result.end, status: result.status, estimatedHours: result.estimated_hours, workedHours: result.worked_hours });
+
     } catch (error) {
         next(error);
     }
