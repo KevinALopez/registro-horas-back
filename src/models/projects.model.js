@@ -16,20 +16,11 @@ const pool = require("../config/db");
  */
 const updateById = async (
     id,
-    { name, description, start, end, status, estimated_hours, worked_hours }
+    { name, description, start, end, status, estimatedHours, workedHours }
 ) => {
     const [result] = await pool.query(
         "update projects set name = ?, description = ?, start = ?, end = ?, status = ?,estimated_hours = ?,worked_hours = ? where id = ?",
-        [
-            name,
-            description,
-            start,
-            end,
-            status,
-            estimated_hours,
-            worked_hours,
-            id,
-        ]
+        [name, description, start, end, status, estimatedHours, workedHours, id]
     );
     return result;
 };
