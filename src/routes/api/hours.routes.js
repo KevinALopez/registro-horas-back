@@ -10,10 +10,12 @@ const {
 const {
     insertPause,
     UpdatePause,
+    getLastIncompletePause,
 } = require("../../controllers/pauses.controller");
 const { checkToken } = require("../../middlewares/auth.middleware");
 
 router.get("/shift/incomplete", checkToken, getLastIncompleteShift);
+router.get("/shift/pause/incomplete", checkToken, getLastIncompletePause);
 router.get("/:month/:year", checkToken, getAllHoursByMonth);
 
 router.post("/start", checkToken, registerWorkdayStart);
