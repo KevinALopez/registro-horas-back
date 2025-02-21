@@ -4,13 +4,17 @@ const {
     getAnUserById,
     deleteUserById,
     createUser,
+    changePassword
 } = require("../../controllers/users.controller");
 const { checkToken, checkAdmin } = require("../../middlewares/auth.middleware");
 
 const router = require("express").Router();
 
+
+
 router.put("/:userId", checkToken, updateUserById);
 router.get("/", checkToken, getAllUsers);
+router.put("/change-password", checkToken, changePassword); // Nueva ruta para cambiar contraseña
 router.get("/:id", checkToken, getAnUserById);
 router.delete("/:id", checkToken, deleteUserById);
 router.post("/register", checkToken, checkAdmin, createUser);

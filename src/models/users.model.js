@@ -70,9 +70,26 @@ const deleteUserById = async (userId) => {
         return { message: "User has been deleted." };
     } catch (error) {
         console.error("🔴 Error en deleteUserById:", error);
-        throw error;
+        throw new Error("An error occurred while updating the password.");
     }
 };
+
+
+const updatePassword = async (userId, hashedPassword) => {
+    try {
+        const [result] = await pool.query(
+            "UPDATE users SET password = ? WHERE id = ?",
+            [hashedPassword, userId]
+        );
+        return result;
+    } catch (error) {
+        return { error: "An error occurred while updating the password." };
+    }
+};
+
+
+
+
 
 module.exports = {
     updateById,
@@ -81,4 +98,5 @@ module.exports = {
     getAnUserById,
     deleteUserById,
     createNewUser,
+    updatePassword,
 };
