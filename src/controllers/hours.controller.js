@@ -42,7 +42,11 @@ const getAllHoursByMonth = async (req, res) => {
         });
     }
 
-    if (!Number.isInteger(parsedYear) || parsedYear < 2000 || parsedYear > 2100) {
+    if (
+        !Number.isInteger(parsedYear) ||
+        parsedYear < 2000 ||
+        parsedYear > 2100
+    ) {
         return res.status(400).json({
             message: "Invalid year. Please provide a valid year (2000-2100).",
         });
@@ -52,7 +56,9 @@ const getAllHoursByMonth = async (req, res) => {
         const hours = await Hours.getAllHoursByMonth(parsedMonth, parsedYear);
 
         if (!Array.isArray(hours) || hours.length === 0) {
-            return res.status(404).json({ message: "No hours found for the selected month and year." });
+            return res.status(404).json({
+                message: "No hours found for the selected month and year.",
+            });
         }
 
         // Formatear la respuesta antes de enviarla
@@ -75,13 +81,13 @@ const getAllHoursByMonth = async (req, res) => {
         console.log(`✅ Datos encontrados:`, formattedData);
 
         res.status(200).json({ data: formattedData });
-
     } catch (error) {
         console.error("❌ Error en getAllHoursByMonthAndYear:", error);
-        res.status(500).json({ message: "Server error, please try again later." });
+        res.status(500).json({
+            message: "Server error, please try again later.",
+        });
     }
 };
-
 
 /**
  * Registers the start of a workday for a user and responds to the client.
@@ -171,23 +177,27 @@ const getHoursWorkedByDate = async (req, res) => {
     const formattedDate = getFormattedDate(date);
     // Validar que la conversión fue exitosa
     if (!formattedDate) {
-        return res.status(400).json({ message: "Invalid date format. Use DD-MM-YYYY." });
+        return res
+            .status(400)
+            .json({ message: "Invalid date format. Use DD-MM-YYYY." });
     }
     try {
         // Obtener datos desde el modelo
         const workData = await Hours.getHoursWorkedByDate(formattedDate);
 
         if (!workData || workData.length === 0) {
-            return res.status(404).json({ message: "No hours found for the selected date." });
+            return res
+                .status(404)
+                .json({ message: "No hours found for the selected date." });
         }
         res.status(200).json({ data: workData });
-
     } catch (error) {
         console.error("❌ Error en getHoursWorkedByDate:", error);
-        res.status(500).json({ message: "Server error, please try again later." });
+        res.status(500).json({
+            message: "Server error, please try again later.",
+        });
     }
 };
-
 
 const registerHoursOnProject = async (req, res, next) => {
     const { date, projectId, userId } = req.body;
@@ -219,10 +229,29 @@ const registerHoursOnProject = async (req, res, next) => {
     }
 };
 
+const getLastIncompleteShift = async (req, res, next) => {
+    const userId = req.user.id;
+
+    try {
+        const result = await Hours.getLastIncompleteShift(userId);
+
+        if (result.length === 0) {
+            return res
+                .status(404)
+                .json({ message: "No incomplete shifts found." });
+        }
+
+        res.json(result[0]);
+    } catch (error) {
+        next(error);
+    }
+};
+
 module.exports = {
     getAllHoursByMonth,
     getHoursWorkedByDate,
     registerWorkdayStart,
     registerWorkdayEnd,
     registerHoursOnProject,
+    getLastIncompleteShift,
 };
