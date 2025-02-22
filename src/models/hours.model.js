@@ -136,7 +136,7 @@ const getLastIncompleteShift = async (userId) => {
 
 getTotalWorkedTime = async (userId) => {
     const [result] = await pool.query(
-        "SELECT start, end, timestampdiff(hour, start, end) AS worked_hours,timestampdiff(minute, start, end) % 60 AS worked_minutesFROM registro.hours_by_date WHERE userid = ?;",
+        "SELECT sum(timestampdiff(hour, start, end)) as hours, sum(timestampdiff(minute, start, end) % 60) AS minutes FROM hours_by_date WHERE userid = ? and end is not null;",
         [userId]
     );
 
@@ -145,7 +145,7 @@ getTotalWorkedTime = async (userId) => {
 
 getAssignedHours = async (userId) => {
     const [result] = await pool.query(
-        "SELECT SUM(hours) AS total_hours FROM hours_on_projects WHERE user_id = ?;",
+        "SELECT SUM(hours) AS hours FROM hours_on_projects WHERE user_id = ?;",
         [userId]
     );
 
@@ -153,10 +153,12 @@ getAssignedHours = async (userId) => {
 };
 
 module.exports = {
-    getAllHoursByMonth,
-    getHoursWorkedByDate,
     registerWorkdayStart,
     registerWorkdayEnd,
     registerHoursOnProject,
+    getAllHoursByMonth,
+    getHoursWorkedByDate,
     getLastIncompleteShift,
+    getTotalWorkedTime,
+    getAssignedHours,
 };
