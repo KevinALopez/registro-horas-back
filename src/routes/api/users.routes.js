@@ -11,7 +11,7 @@ const { checkToken, checkAdmin, verifyToken } = require("../../middlewares/auth.
 const router = require("express").Router();
 
 
-router.put("/change-password/:id", checkToken, verifyToken, changePassword); // Nueva ruta para cambiar contraseña
+router.put("/change-password", checkToken, changePassword);// Nueva ruta para cambiar contraseña
 router.put("/:userId", checkToken, updateUserById);
 router.get("/", checkToken, getAllUsers);
 

@@ -120,7 +120,7 @@ const userExists = async (id) => {
     }
 }
 
-const changePassword = async (req, res) => {
+/*const changePassword = async (req, res) => {
     const { currentPassword, newPassword } = req.body;
     const userId = req.body.userId || req.user?.id; // Se obtiene del token
     // Verificar que se envían ambas contraseñas
@@ -146,7 +146,35 @@ const changePassword = async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: "Server error, please try again later." });
     }
+};*/
+const changePassword = async (req, res) => {
+    const { currentPassword, newPassword } = req.body;
+    const userId = req.user.id;  // 📌 Obtener ID del usuario autenticado
+
+    if (!currentPassword || !newPassword) {
+        return res.status(400).json({ message: "Both current and new passwords are required." });
+    }
+
+    try {
+        const user = await User.selectById(userId);
+        if (!user) {
+            return res.status(404).json({ message: "User not found." });
+        }
+
+        const isMatch = bcrypt.compareSync(currentPassword, user.password);
+        if (!isMatch) {
+            return res.status(401).json({ message: "Current password is incorrect." });
+        }
+
+        const hashedNewPassword = bcrypt.hashSync(newPassword, 8);
+        await User.updatePassword(userId, hashedNewPassword);
+
+        res.status(200).json({ message: "Password changed successfully." });
+    } catch (error) {
+        res.status(500).json({ message: "Server error, please try again later." });
+    }
 };
+
 
 module.exports = {
     updateUserById,
