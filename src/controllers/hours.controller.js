@@ -273,10 +273,8 @@ const getUnassignedHours = async (req, res, next) => {
         );
 
         res.json({
-            unassignedTime: {
-                hours: unassignedHours,
-                minutes: unassignedMinutes,
-            },
+            hours: unassignedHours,
+            minutes: unassignedMinutes,
         });
     } catch (error) {
         next(error);
