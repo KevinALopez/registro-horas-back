@@ -122,7 +122,7 @@ const userExists = async (id) => {
 
 const changePassword = async (req, res) => {
     const { currentPassword, newPassword } = req.body;
-    const userId = req.user.id; // Se obtiene del token
+    const userId = req.body.userId || req.user?.id; // Se obtiene del token
     // Verificar que se envían ambas contraseñas
     if (!currentPassword || !newPassword) {
         return res.status(400).json({ message: "Both current and new passwords are required." });
