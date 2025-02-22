@@ -13,13 +13,30 @@ const insertPause = async (req, res, next) => {
         next(error);
     }
 };
-const UpdatePause = async (req, res,next) => {
+const UpdatePause = async (req, res, next) => {
     try {
         const result = await Pause.UpdatePause(req.body);
         res.json({
             message: "Pause end",
-            
         });
+    } catch (error) {
+        next(error);
+    }
+};
+
+const getLastIncompletePause = async (req, res, next) => {
+    const userId = req.user.id;
+
+    try {
+        const result = await Pause.getLastIncompletePause(userId);
+
+        if (result.length === 0) {
+            return res
+                .status(404)
+                .json({ message: "No incomplete pause found." });
+        }
+
+        res.json(result[0]);
     } catch (error) {
         next(error);
     }
@@ -27,6 +44,6 @@ const UpdatePause = async (req, res,next) => {
 
 module.exports = {
     insertPause,
-    UpdatePause
-}
-
+    UpdatePause,
+    getLastIncompletePause,
+};
