@@ -78,8 +78,6 @@ const getAllHoursByMonth = async (req, res) => {
             },
         }));
 
-        console.log(`✅ Datos encontrados:`, formattedData);
-
         res.status(200).json({ data: formattedData });
     } catch (error) {
         console.error("❌ Error en getAllHoursByMonthAndYear:", error);
