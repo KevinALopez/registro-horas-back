@@ -78,8 +78,6 @@ const getAllHoursByMonth = async (req, res) => {
             },
         }));
 
-        console.log(`✅ Datos encontrados:`, formattedData);
-
         res.status(200).json({ data: formattedData });
     } catch (error) {
         console.error("❌ Error en getAllHoursByMonthAndYear:", error);
@@ -247,6 +245,48 @@ const getLastIncompleteShift = async (req, res, next) => {
     }
 };
 
+const getUnassignedHours = async (req, res, next) => {
+    const userId = req.user.id;
+
+    try {
+        const workedTime = await Hours.getTotalWorkedTime(userId);
+        const assignedHours = await Hours.getAssignedHours(userId);
+
+        if (workedTime.length === 0 || assignedHours.length === 0) {
+            return res.status(404).json({ message: "No hours found." });
+        }
+
+        workedTime[0].hours = (
+            Number(workedTime[0].hours) +
+            Number(parseInt(workedTime[0].minutes) / 60)
+        ).toFixed(2);
+
+        const totalWorkedTime = convertToHoursAndMinutes(workedTime[0].hours);
+        const totalAssignedHours = convertToHoursAndMinutes(
+            assignedHours[0].hours
+        );
+
+        const unassignedHours =
+            totalWorkedTime.hours - totalAssignedHours.hours;
+        const unassignedMinutes = Math.abs(
+            Math.round(totalWorkedTime.minutes - totalAssignedHours.minutes)
+        );
+
+        res.json({
+            hours: unassignedHours,
+            minutes: unassignedMinutes,
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+const convertToHoursAndMinutes = (decimalHours) => {
+    const hours = Math.floor(decimalHours);
+    const minutes = (decimalHours - hours) * 60;
+    return { hours, minutes };
+};
+
 module.exports = {
     getAllHoursByMonth,
     getHoursWorkedByDate,
@@ -254,4 +294,5 @@ module.exports = {
     registerWorkdayEnd,
     registerHoursOnProject,
     getLastIncompleteShift,
+    getUnassignedHours,
 };
