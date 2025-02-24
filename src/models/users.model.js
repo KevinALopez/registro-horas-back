@@ -1,12 +1,9 @@
 const pool = require("../config/db");
 
-const updateById = async (
-    userId,
-    { username, email, password, role, contract }
-) => {
+const updateById = async (userId, { username, email, role, contract }) => {
     const [result] = await pool.query(
-        "update users set username = ?, email = ?, password = ?, role = ?, contract = ? where id = ?",
-        [username, email, password, role, contract, userId]
+        "update users set username = ?, email = ?, role = ?, contract = ? where id = ?",
+        [username, email, role, contract, userId]
     );
 
     return result;
@@ -74,7 +71,6 @@ const deleteUserById = async (userId) => {
     }
 };
 
-
 const updatePassword = async (userId, hashedPassword) => {
     try {
         const [result] = await pool.query(
@@ -86,10 +82,6 @@ const updatePassword = async (userId, hashedPassword) => {
         return { error: "An error occurred while updating the password." };
     }
 };
-
-
-
-
 
 module.exports = {
     updateById,

@@ -1,11 +1,8 @@
 const bcrypt = require("bcryptjs");
 const User = require("../models/users.model");
 
-
 const updateUserById = async (req, res, next) => {
     const { userId } = req.params;
-
-    req.body.password = bcrypt.hashSync(req.body.password, 8); //se hace un hash de la contraseña antes de actualizar
 
     try {
         await User.updateById(userId, req.body);
@@ -104,21 +101,19 @@ const deleteUserById = async (req, res) => {
     }
 };
 
-
 const userExists = async (id) => {
-
     //función que permite comprobar que un usuarioExiste en la BBDD
 
     try {
         const user = await User.selectById(id);
 
-        if (!user) return true
+        if (!user) return true;
 
         return false;
     } catch (error) {
         next(error);
     }
-}
+};
 
 /*const changePassword = async (req, res) => {
     const { currentPassword, newPassword } = req.body;
@@ -149,10 +144,12 @@ const userExists = async (id) => {
 };*/
 const changePassword = async (req, res) => {
     const { currentPassword, newPassword } = req.body;
-    const userId = req.user.id;  // 📌 Obtener ID del usuario autenticado
+    const userId = req.user.id; // 📌 Obtener ID del usuario autenticado
 
     if (!currentPassword || !newPassword) {
-        return res.status(400).json({ message: "Both current and new passwords are required." });
+        return res
+            .status(400)
+            .json({ message: "Both current and new passwords are required." });
     }
 
     try {
@@ -163,7 +160,9 @@ const changePassword = async (req, res) => {
 
         const isMatch = bcrypt.compareSync(currentPassword, user.password);
         if (!isMatch) {
-            return res.status(401).json({ message: "Current password is incorrect." });
+            return res
+                .status(401)
+                .json({ message: "Current password is incorrect." });
         }
 
         const hashedNewPassword = bcrypt.hashSync(newPassword, 8);
@@ -171,10 +170,11 @@ const changePassword = async (req, res) => {
 
         res.status(200).json({ message: "Password changed successfully." });
     } catch (error) {
-        res.status(500).json({ message: "Server error, please try again later." });
+        res.status(500).json({
+            message: "Server error, please try again later.",
+        });
     }
 };
-
 
 module.exports = {
     updateUserById,
@@ -185,4 +185,3 @@ module.exports = {
     userExists,
     changePassword,
 };
-
