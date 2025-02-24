@@ -152,6 +152,15 @@ getAssignedHours = async (userId) => {
     return result;
 };
 
+getHoursOnProjectsByUser = async (userId) => {
+    const [result] = await pool.query(
+        "SELECT * FROM hours_on_projects WHERE user_id = ?;",
+        [userId]
+    );
+
+    return result;
+};
+
 module.exports = {
     registerWorkdayStart,
     registerWorkdayEnd,
@@ -161,4 +170,5 @@ module.exports = {
     getLastIncompleteShift,
     getTotalWorkedTime,
     getAssignedHours,
+    getHoursOnProjectsByUser,
 };

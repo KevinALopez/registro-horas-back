@@ -4,6 +4,7 @@ dayjs.extend(customPasrseFormat);
 
 const User = require("../controllers/users.controller");
 const Project = require("../controllers/projects.controller");
+const ProjectModel = require("../models/projects.model");
 const Hours = require("../models/hours.model");
 
 const getFormattedDate = (dateString) => {
@@ -287,6 +288,40 @@ const convertToHoursAndMinutes = (decimalHours) => {
     return { hours, minutes };
 };
 
+const getHoursOnProjectsByUser = async (req, res, next) => {
+    const userId = req.user.id;
+
+    try {
+        const result = await Hours.getHoursOnProjectsByUser(userId);
+
+        if (result.length === 0) {
+            return res
+                .status(404)
+                .json({ message: "No hours found for the selected user." });
+        }
+
+        const data = [];
+
+        for (const record of result) {
+            const project = await ProjectModel.selectById(record.project_id);
+
+            data.push({
+                id: record.id,
+                hours: record.hours,
+                date: record.date,
+                project: {
+                    id: project.id,
+                    name: project.name,
+                },
+            });
+        }
+
+        return res.json({ data });
+    } catch (error) {
+        next(error);
+    }
+};
+
 module.exports = {
     getAllHoursByMonth,
     getHoursWorkedByDate,
@@ -295,4 +330,5 @@ module.exports = {
     registerHoursOnProject,
     getLastIncompleteShift,
     getUnassignedHours,
+    getHoursOnProjectsByUser,
 };
